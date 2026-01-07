@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Experience } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { LogOut, User } from "lucide-react";
 // Ensure this path matches where your ExperienceList component is located
@@ -26,15 +26,27 @@ export default async function Dashboard() {
   // We rely on insertion order for now (rowid), or we could implement robust sorting.
   const experiences = await prisma.experience.findMany();
 
-  const initialExperiences = experiences.map((exp) => ({
-    id: exp.id,
-    label: exp.label,
-    role: exp.role,
-    period: exp.period,
-    location: exp.location,
-    colorClass: exp.colorClass,
-    activeColorClass: exp.activeColorClass,
-  }));
+  interface ExperienceData {
+    id: string;
+    label: string;
+    role: string;
+    period: string;
+    location: string;
+    colorClass: string;
+    activeColorClass: string;
+  }
+
+  const initialExperiences: ExperienceData[] = experiences.map(
+    (exp: Experience) => ({
+      id: String(exp.id),
+      label: exp.label,
+      role: exp.role,
+      period: exp.period,
+      location: exp.location,
+      colorClass: exp.colorClass,
+      activeColorClass: exp.activeColorClass,
+    })
+  );
 
   return (
     <div className="min-h-screen bg-white dark:bg-black flex flex-col">
