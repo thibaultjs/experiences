@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Experience {
+  id               String             @id
+  label            String
+  role             String
+  period           String
+  location         String
+  colorClass       String
+  activeColorClass String
+  techStack        String?
+  details          ExperienceDetail[]
+}
+
+model ExperienceDetail {
+  id           Int        @id @default(autoincrement())
+  text         String
+  experienceId String
+  experience   Experience @relation(fields: [experienceId], references: [id])
+}
